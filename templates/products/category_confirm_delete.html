@@ -1,0 +1,37 @@
+{% extends 'base.html' %}
+
+{% block title %}
+Delete Category - MyStore
+{% endblock %}
+
+{% block content %}
+
+<div class="delete-container">
+
+    <h1>Delete Category</h1>
+
+    <p>
+        Are you sure you want to delete
+        <strong>{{ category.name }}</strong>?
+    </p>
+
+    <form method="POST">
+
+        {% csrf_token %}
+
+        <button type="submit" class="delete-btn">
+            Yes, Delete
+        </button>
+
+        <a
+            href="{% url 'category_list' %}"
+            class="cancel-btn"
+        >
+            Cancel
+        </a>
+
+    </form>
+
+</div>
+
+{% endblock %}

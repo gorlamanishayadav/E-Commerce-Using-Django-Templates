@@ -1,0 +1,318 @@
+{% extends 'base.html' %}
+
+{% block title %}
+Products - MyStore
+{% endblock %}
+
+{% block content %}
+
+<section class="products-section">
+
+    <!-- =========================
+         PAGE HEADER
+    ========================== -->
+
+    <div class="products-header">
+
+        <div>
+
+            <h1>
+                Our Products
+            </h1>
+
+            <p>
+                Explore our collection of quality products.
+            </p>
+
+        </div>
+
+        {% if user.is_staff %}
+
+            <a
+                href="{% url 'product_create' %}"
+                class="btn"
+            >
+                + Add Product
+            </a>
+
+        {% endif %}
+
+    </div>
+
+
+    <!-- =========================
+         SEARCH AND FILTER
+    ========================== -->
+
+    <div class="product-filters">
+
+        <form
+            method="GET"
+            class="filter-form"
+        >
+
+            <!-- SEARCH -->
+
+            <div class="search-box">
+
+                <input
+                    type="text"
+                    name="search"
+                    placeholder="Search products..."
+                    value="{{ search }}"
+                >
+
+                <button
+                    type="submit"
+                    class="search-btn"
+                >
+                    Search
+                </button>
+
+            </div>
+
+
+            <!-- CATEGORY -->
+
+            <div class="category-filter">
+
+                <select name="category">
+
+                    <option value="">
+                        All Categories
+                    </option>
+
+                    {% for category in categories %}
+
+                        <option
+                            value="{{ category.id }}"
+                            {% if selected_category == category.id|stringformat:"s" %}
+                                selected
+                            {% endif %}
+                        >
+                            {{ category.name }}
+                        </option>
+
+                    {% endfor %}
+
+                </select>
+
+            </div>
+
+
+            <!-- CLEAR -->
+
+            <a
+                href="{% url 'product_list' %}"
+                class="clear-filter-btn"
+            >
+                Clear
+            </a>
+
+        </form>
+
+    </div>
+
+
+    <!-- =========================
+         SEARCH RESULT INFO
+    ========================== -->
+
+    {% if search or selected_category %}
+
+        <div class="filter-result">
+
+            <p>
+
+                Showing
+                <strong>{{ products|length }}</strong>
+                product{{ products|length|pluralize }}
+
+                {% if search %}
+
+                    for
+                    <strong>"{{ search }}"</strong>
+
+                {% endif %}
+
+            </p>
+
+        </div>
+
+    {% endif %}
+
+
+    <!-- =========================
+         PRODUCT GRID
+    ========================== -->
+
+    <div class="product-grid">
+
+        {% for product in products %}
+
+            <div class="product-card">
+
+                <!-- PRODUCT IMAGE -->
+
+                <div class="product-image">
+
+                    {% if product.image %}
+
+                        <img
+                            src="{{ product.image.url }}"
+                            alt="{{ product.name }}"
+                        >
+
+                    {% else %}
+
+                        <div class="no-product-image">
+                            No Image
+                        </div>
+
+                    {% endif %}
+
+                </div>
+
+
+                <!-- PRODUCT NAME -->
+
+                <h3>
+                    {{ product.name }}
+                </h3>
+
+
+                <!-- DESCRIPTION -->
+
+                <p>
+                    {{ product.description|truncatewords:15 }}
+                </p>
+
+
+                <!-- CATEGORY -->
+
+                <p class="product-category">
+
+                    Category:
+                    <strong>
+                        {{ product.category.name }}
+                    </strong>
+
+                </p>
+
+
+                <!-- PRICE -->
+
+                <h4 class="product-price">
+
+                    ₹{{ product.price|floatformat:2 }}
+
+                </h4>
+
+
+                <!-- STOCK -->
+
+                {% if product.stock == 0 %}
+
+                    <p class="stock-out">
+                        ❌ Out of Stock
+                    </p>
+
+                {% elif product.stock <= 5 %}
+
+                    <p class="stock-low">
+                        ⚠️ Only {{ product.stock }} left
+                    </p>
+
+                {% else %}
+
+                    <p class="stock-available">
+                        ✓ Stock: {{ product.stock }}
+                    </p>
+
+                {% endif %}
+
+
+                <!-- VIEW DETAILS -->
+
+                <a
+                    href="{% url 'product_detail' product.id %}"
+                    class="btn"
+                >
+                    View Details
+                </a>
+
+
+                <!-- ADD TO CART -->
+
+                {% if user.is_authenticated and product.stock > 0 %}
+
+                    <a
+                        href="{% url 'add_to_cart' product.id %}"
+                        class="btn"
+                    >
+                        Add to Cart
+                    </a>
+
+                {% endif %}
+
+
+                <!-- ADMIN ACTIONS -->
+
+                {% if user.is_staff %}
+
+                    <div class="product-admin-actions">
+
+                        <a
+                            href="{% url 'product_update' product.id %}"
+                            class="edit-btn"
+                        >
+                            Edit
+                        </a>
+
+                        <a
+                            href="{% url 'product_delete' product.id %}"
+                            class="delete-btn"
+                        >
+                            Delete
+                        </a>
+
+                    </div>
+
+                {% endif %}
+
+            </div>
+
+        {% empty %}
+
+            <!-- NO PRODUCTS -->
+
+            <div class="no-products">
+
+                <div class="no-products-icon">
+                    🛍️
+                </div>
+
+                <h2>
+                    No Products Found
+                </h2>
+
+                <p>
+                    We couldn't find any products matching your search.
+                </p>
+
+                <a
+                    href="{% url 'product_list' %}"
+                    class="btn"
+                >
+                    View All Products
+                </a>
+
+            </div>
+
+        {% endfor %}
+
+    </div>
+
+</section>
+
+{% endblock %}

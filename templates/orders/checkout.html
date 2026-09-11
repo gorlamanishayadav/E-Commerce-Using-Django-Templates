@@ -1,0 +1,159 @@
+{% extends 'base.html' %}
+
+{% block title %}Checkout - MyStore{% endblock %}
+
+{% block content %}
+
+<section class="checkout-section">
+
+    <h1>Checkout</h1>
+
+    <div class="checkout-container">
+
+        <!-- LEFT SIDE -->
+
+        <div class="checkout-left">
+
+            <!-- Address -->
+
+            <div class="checkout-card">
+
+                <h2>Delivery Address</h2>
+
+                <p class="checkout-help">
+                    Select the address where you want your order delivered.
+                </p>
+
+                <form method="POST">
+
+                    {% csrf_token %}
+
+                    <div class="address-select">
+                        {{ form.address }}
+                    </div>
+
+                    {% if form.address.errors %}
+                        <div class="form-errors">
+                            {{ form.address.errors }}
+                        </div>
+                    {% endif %}
+
+                    <!-- Order Items -->
+
+                    <h2 class="checkout-products-title">
+                        Order Items
+                    </h2>
+
+                    <div class="checkout-products">
+
+                        {% for item in items %}
+
+                        <div class="checkout-product">
+
+                            <div class="checkout-product-image">
+
+                                {% if item.product.image %}
+
+                                    <img
+                                        src="{{ item.product.image.url }}"
+                                        alt="{{ item.product.name }}"
+                                    >
+
+                                {% else %}
+
+                                    <div class="no-image">
+                                        No Image
+                                    </div>
+
+                                {% endif %}
+
+                            </div>
+
+
+                            <div class="checkout-product-info">
+
+                                <h3>
+                                    {{ item.product.name }}
+                                </h3>
+
+                                <p>
+                                    Price: ₹{{ item.product.price }}
+                                </p>
+
+                                <p>
+                                    Quantity: {{ item.quantity }}
+                                </p>
+
+                            </div>
+
+                            <div class="checkout-product-price">
+
+                                ₹{{ item.product.price|floatformat:2 }}
+
+                                × {{ item.quantity }}
+
+                            </div>
+
+                        </div>
+
+                        {% endfor %}
+
+                    </div>
+
+                    <button
+                        type="submit"
+                        class="place-order-btn"
+                    >
+                        Place Order
+                    </button>
+
+                </form>
+
+            </div>
+
+        </div>
+
+
+        <!-- RIGHT SIDE -->
+
+        <div class="checkout-right">
+
+            <div class="checkout-summary">
+
+                <h2>Order Summary</h2>
+
+                <div class="summary-row">
+
+                    <span>Products</span>
+
+                    <span>{{ items|length }}</span>
+
+                </div>
+
+                <div class="summary-row">
+
+                    <span>Delivery</span>
+
+                    <span>Free</span>
+
+                </div>
+
+                <div class="checkout-total">
+
+                    <span>Total</span>
+
+                    <strong>
+                        ₹{{ total|floatformat:2 }}
+                    </strong>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</section>
+
+{% endblock %}

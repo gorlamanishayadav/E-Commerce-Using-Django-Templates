@@ -1,0 +1,203 @@
+{% extends 'base.html' %}
+
+{% block title %}My Cart - MyStore{% endblock %}
+
+{% block content %}
+
+<section class="cart-section">
+
+    <h1>My Shopping Cart</h1>
+
+    {% if items %}
+
+    <div class="cart-container">
+
+        <!-- Cart Items -->
+
+        <div class="cart-items">
+
+            {% for item in items %}
+
+            <div class="cart-item">
+
+                <!-- Product Image -->
+
+                <div class="cart-image">
+
+                    {% if item.product.image %}
+
+                        <img
+                            src="{{ item.product.image.url }}"
+                            alt="{{ item.product.name }}"
+                        >
+
+                    {% else %}
+
+                        <div class="no-image">
+                            No Image
+                        </div>
+
+                    {% endif %}
+
+                </div>
+
+
+                <!-- Product Details -->
+
+                <div class="cart-details">
+
+                    <h3>
+                        {{ item.product.name }}
+                    </h3>
+
+                    <p class="cart-price">
+                        ₹{{ item.product.price }}
+                    </p>
+
+                    <p>
+                        Quantity:
+                        {{ item.quantity }}
+                    </p>
+
+                    <p class="item-total">
+                        Item Total:
+                        ₹{{ item.product.price|floatformat:2 }}
+                        × {{ item.quantity }}
+                    </p>
+
+                </div>
+
+
+                <!-- Update Quantity -->
+
+                <div class="cart-actions">
+
+                    <form
+                        method="POST"
+                        action="{% url 'update_cart' item.id %}"
+                    >
+
+                        {% csrf_token %}
+
+                        <label>Quantity</label>
+
+                        <input
+                            type="number"
+                            name="quantity"
+                            value="{{ item.quantity }}"
+                            min="1"
+                        >
+
+                        <button
+                            type="submit"
+                            class="update-btn"
+                        >
+                            Update
+                        </button>
+
+                    </form>
+
+
+                    <!-- Remove -->
+
+                    <form
+                        method="POST"
+                        action="{% url 'remove_from_cart' item.id %}"
+                    >
+
+                        {% csrf_token %}
+
+                        <button
+                            type="submit"
+                            class="remove-btn"
+                        >
+                            Remove
+                        </button>
+
+                    </form>
+
+                </div>
+
+            </div>
+
+            {% endfor %}
+
+        </div>
+
+
+        <!-- Cart Summary -->
+
+        <div class="cart-summary">
+
+            <h2>Order Summary</h2>
+
+            <div class="summary-row">
+
+                <span>Items</span>
+
+                <span>
+                    {{ items|length }}
+                </span>
+
+            </div>
+
+            <div class="summary-row total-row">
+
+                <strong>Total</strong>
+
+                <strong>
+                    ₹{{ total|floatformat:2 }}
+                </strong>
+
+            </div>
+
+
+            <a
+                href="{% url 'checkout' %}"
+                class="checkout-btn"
+            >
+                Proceed to Checkout
+            </a>
+
+
+            <a
+                href="{% url 'product_list' %}"
+                class="continue-btn"
+            >
+                Continue Shopping
+            </a>
+
+        </div>
+
+    </div>
+
+    {% else %}
+
+    <!-- Empty Cart -->
+
+    <div class="empty-cart">
+
+        <div class="empty-cart-icon">
+            🛒
+        </div>
+
+        <h2>Your Cart is Empty</h2>
+
+        <p>
+            You haven't added any products to your cart yet.
+        </p>
+
+        <a
+            href="{% url 'product_list' %}"
+            class="btn"
+        >
+            Start Shopping
+        </a>
+
+    </div>
+
+    {% endif %}
+
+</section>
+
+{% endblock %}

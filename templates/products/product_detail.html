@@ -1,0 +1,72 @@
+{% extends 'base.html' %}
+
+{% block title %}
+{{ product.name }} - MyStore
+{% endblock %}
+
+{% block content %}
+
+<section class="product-detail">
+
+    {% if product.image %}
+
+        <div class="product-image">
+
+            <img
+                src="{{ product.image.url }}"
+                alt="{{ product.name }}"
+            >
+
+        </div>
+
+    {% endif %}
+
+
+    <div class="product-info">
+
+        <h1>{{ product.name }}</h1>
+
+        <p>
+            {{ product.description }}
+        </p>
+
+        <h2>
+            ₹{{ product.price }}
+        </h2>
+
+        <p>
+            Available Stock: {{ product.stock }}
+        </p>
+
+
+        {% if user.is_authenticated and product.stock > 0 %}
+
+            <a
+                href="{% url 'add_to_cart' product.id %}"
+                class="btn"
+            >
+                Add to Cart
+            </a>
+
+        {% elif product.stock == 0 %}
+
+            <p class="out-of-stock">
+                Out of Stock
+            </p>
+
+        {% else %}
+
+            <a
+                href="{% url 'login' %}"
+                class="btn"
+            >
+                Login to Buy
+            </a>
+
+        {% endif %}
+
+    </div>
+
+</section>
+
+{% endblock %}

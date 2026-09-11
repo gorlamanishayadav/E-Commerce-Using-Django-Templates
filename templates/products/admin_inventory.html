@@ -1,0 +1,508 @@
+{% extends 'base.html' %}
+
+{% block title %}
+Admin Inventory - MyStore
+{% endblock %}
+
+{% block content %}
+
+<section class="inventory-section">
+
+    
+
+
+    <!-- ==========================================
+         HEADER
+    =========================================== -->
+
+    <div class="inventory-header">
+
+        <div>
+
+            <h1>
+                Inventory Management
+            </h1>
+
+            <p>
+                Monitor your products and stock levels.
+            </p>
+
+        </div>
+
+
+        <div class="inventory-header-actions">
+
+            <a
+                href="{% url 'product_create' %}"
+                class="inventory-add-btn"
+            >
+                + Add Product
+            </a>
+
+
+            <a
+                href="{% url 'product_list' %}"
+                class="inventory-back-btn"
+            >
+                View Products
+            </a>
+
+        </div>
+
+    </div>
+
+
+    <!-- ==========================================
+         INVENTORY STATISTICS
+    =========================================== -->
+
+    <div class="inventory-stats">
+
+
+        <!-- TOTAL PRODUCTS -->
+
+        <div class="inventory-stat-card">
+
+            <div class="inventory-stat-icon">
+                📦
+            </div>
+
+            <div>
+
+                <h3>
+                    Total Products
+                </h3>
+
+                <h2>
+                    {{ total_products }}
+                </h2>
+
+                <p>
+                    Products in catalog
+                </p>
+
+            </div>
+
+        </div>
+
+
+        <!-- IN STOCK -->
+
+        <div class="inventory-stat-card">
+
+            <div class="inventory-stat-icon">
+                ✅
+            </div>
+
+            <div>
+
+                <h3>
+                    In Stock
+                </h3>
+
+                <h2>
+                    {{ in_stock }}
+                </h2>
+
+                <p>
+                    More than 5 items
+                </p>
+
+            </div>
+
+        </div>
+
+
+        <!-- LOW STOCK -->
+
+        <div class="inventory-stat-card">
+
+            <div class="inventory-stat-icon">
+                ⚠️
+            </div>
+
+            <div>
+
+                <h3>
+                    Low Stock
+                </h3>
+
+                <h2>
+                    {{ low_stock }}
+                </h2>
+
+                <p>
+                    1 - 5 items remaining
+                </p>
+
+            </div>
+
+        </div>
+
+
+        <!-- OUT OF STOCK -->
+
+        <div class="inventory-stat-card">
+
+            <div class="inventory-stat-icon">
+                ❌
+            </div>
+
+            <div>
+
+                <h3>
+                    Out of Stock
+                </h3>
+
+                <h2>
+                    {{ out_of_stock }}
+                </h2>
+
+                <p>
+                    Products unavailable
+                </p>
+
+            </div>
+
+        </div>
+
+    </div>
+
+
+    <!-- ==========================================
+         SEARCH AND FILTER
+    =========================================== -->
+
+    <div class="inventory-filters">
+
+        <form
+            method="GET"
+            class="inventory-filter-form"
+        >
+
+
+            <!-- SEARCH -->
+
+            <div class="inventory-search">
+
+                <input
+                    type="text"
+                    name="search"
+                    placeholder="Search product..."
+                    value="{{ search }}"
+                >
+
+                <button
+                    type="submit"
+                >
+                    Search
+                </button>
+
+            </div>
+
+
+            <!-- CATEGORY -->
+
+            <select
+                name="category"
+                class="inventory-category"
+            >
+
+                <option value="">
+                    All Categories
+                </option>
+
+
+                {% for category in categories %}
+
+                    <option
+                        value="{{ category.id }}"
+                        {% if selected_category == category.id|stringformat:"s" %}
+                            selected
+                        {% endif %}
+                    >
+
+                        {{ category.name }}
+
+                    </option>
+
+                {% endfor %}
+
+            </select>
+
+
+            <!-- CLEAR -->
+
+            <a
+                href="{% url 'admin_inventory' %}"
+                class="inventory-clear"
+            >
+                Clear
+            </a>
+
+        </form>
+
+    </div>
+
+
+    <!-- ==========================================
+         INVENTORY TABLE
+    =========================================== -->
+
+    <div class="inventory-table-card">
+
+
+        <div class="inventory-table-header">
+
+            <div>
+
+                <h2>
+                    Product Inventory
+                </h2>
+
+                <p>
+                    Manage product stock levels.
+                </p>
+
+            </div>
+
+        </div>
+
+
+        {% if products %}
+
+        <div class="inventory-table-container">
+
+            <table class="inventory-table">
+
+
+                <thead>
+
+                    <tr>
+
+                        <th>
+                            Product
+                        </th>
+
+                        <th>
+                            Category
+                        </th>
+
+                        <th>
+                            Price
+                        </th>
+
+                        <th>
+                            Stock
+                        </th>
+
+                        <th>
+                            Status
+                        </th>
+
+                        <th>
+                            Action
+                        </th>
+
+                    </tr>
+
+                </thead>
+
+
+                <tbody>
+
+
+                    {% for product in products %}
+
+                    <tr>
+
+
+                        <!-- PRODUCT -->
+
+                        <td>
+
+                            <div class="inventory-product">
+
+                                {% if product.image %}
+
+                                    <img
+                                        src="{{ product.image.url }}"
+                                        alt="{{ product.name }}"
+                                    >
+
+                                {% else %}
+
+                                    <div class="inventory-no-image">
+                                        No Image
+                                    </div>
+
+                                {% endif %}
+
+
+                                <div>
+
+                                    <strong>
+                                        {{ product.name }}
+                                    </strong>
+
+                                </div>
+
+                            </div>
+
+                        </td>
+
+
+                        <!-- CATEGORY -->
+
+                        <td>
+
+                            {{ product.category.name }}
+
+                        </td>
+
+
+                        <!-- PRICE -->
+
+                        <td>
+
+                            ₹{{ product.price|floatformat:2 }}
+
+                        </td>
+
+
+                        <!-- STOCK -->
+
+                        <<td>
+    <form method="POST"
+          action="{% url 'update_stock' product.id %}"
+          class="stock-update-form">
+
+        {% csrf_token %}
+
+        <input
+            type="number"
+            name="stock"
+            value="{{ product.stock }}"
+            min="0"
+            class="stock-input"
+        >
+
+        <button type="submit" class="stock-update-btn">
+            Update
+        </button>
+
+    </form>
+</td>
+
+
+                        <!-- STATUS -->
+
+                        <td>
+
+
+                            {% if product.stock == 0 %}
+
+                                <span class="inventory-status out">
+                                    Out of Stock
+                                </span>
+
+
+                            {% elif product.stock <= 5 %}
+
+                                <span class="inventory-status low">
+                                    Low Stock
+                                </span>
+
+
+                            {% else %}
+
+                                <span class="inventory-status available">
+                                    In Stock
+                                </span>
+
+                            {% endif %}
+
+
+                        </td>
+
+
+                        <!-- ACTION -->
+
+                        <td>
+
+                            <div class="inventory-actions">
+
+
+                                <a
+                                    href="{% url 'product_update' product.id %}"
+                                    class="inventory-edit-btn"
+                                >
+                                    Edit
+                                </a>
+
+
+                                <a
+                                    href="{% url 'product_detail' product.id %}"
+                                    class="inventory-view-btn"
+                                >
+                                    View
+                                </a>
+
+
+                            </div>
+
+                        </td>
+
+
+                    </tr>
+
+                    {% endfor %}
+
+
+                </tbody>
+
+            </table>
+
+        </div>
+
+
+        {% else %}
+
+
+        <!-- ==========================================
+             NO PRODUCTS
+        =========================================== -->
+
+        <div class="inventory-empty">
+
+            <div class="inventory-empty-icon">
+                📦
+            </div>
+
+            <h2>
+                No Products Found
+            </h2>
+
+            <p>
+                No products match your search or category filter.
+            </p>
+
+            <a
+                href="{% url 'admin_inventory' %}"
+                class="inventory-add-btn"
+            >
+                View All Products
+            </a>
+
+        </div>
+
+
+        {% endif %}
+
+
+    </div>
+
+
+</section>
+
+{% endblock %}

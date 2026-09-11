@@ -1,0 +1,47 @@
+{% extends 'base.html' %}
+
+{% block title %}Delete Address - MyStore{% endblock %}
+
+{% block content %}
+
+<div class="delete-container">
+
+    <h1>Delete Address</h1>
+
+    <p>
+        Are you sure you want to delete this address?
+    </p>
+
+    <div class="address-preview">
+
+        <strong>{{ address.full_name }}</strong>
+
+        <p>{{ address.phone }}</p>
+
+        <p>{{ address.address_line }}</p>
+
+        <p>
+            {{ address.city }},
+            {{ address.state }}
+            - {{ address.pincode }}
+        </p>
+
+    </div>
+
+    <form method="POST">
+
+        {% csrf_token %}
+
+        <button type="submit" class="delete-btn">
+            Yes, Delete
+        </button>
+
+        <a href="{% url 'profile' %}" class="cancel-btn">
+            Cancel
+        </a>
+
+    </form>
+
+</div>
+
+{% endblock %}

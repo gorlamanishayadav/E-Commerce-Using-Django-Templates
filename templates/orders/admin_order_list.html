@@ -1,0 +1,234 @@
+{% extends 'base.html' %}
+
+{% block title %}
+Manage Orders - MyStore
+{% endblock %}
+
+
+{% block content %}
+
+<section class="admin-orders-section">
+
+
+    <!-- ========================= -->
+    <!-- PAGE HEADER -->
+    <!-- ========================= -->
+
+    <div class="admin-orders-header">
+
+        <div>
+
+            <h1>
+                Manage Orders
+            </h1>
+
+            <p>
+                View and manage all customer orders.
+            </p>
+
+        </div>
+
+
+        <a
+            href="{% url 'home' %}"
+            class="back-home-btn"
+        >
+            ← Back to Home
+        </a>
+
+    </div>
+
+
+
+    <!-- ========================= -->
+    <!-- ORDERS TABLE -->
+    <!-- ========================= -->
+
+    {% if orders %}
+
+    <div class="admin-orders-table-container">
+
+        <table class="admin-orders-table">
+
+
+            <!-- TABLE HEADER -->
+
+            <thead>
+
+                <tr>
+
+                    <th>
+                        Order ID
+                    </th>
+
+                    <th>
+                        Customer
+                    </th>
+
+                    <th>
+                        Email
+                    </th>
+
+                    <th>
+                        Total Amount
+                    </th>
+
+                    <th>
+                        Status
+                    </th>
+
+                    <th>
+                        Order Date
+                    </th>
+
+                    <th>
+                        Action
+                    </th>
+
+                </tr>
+
+            </thead>
+
+
+
+            <!-- TABLE BODY -->
+
+            <tbody>
+
+                {% for order in orders %}
+
+                <tr>
+
+
+                    <!-- ORDER ID -->
+
+                    <td>
+
+                        <strong>
+                            #{{ order.id }}
+                        </strong>
+
+                    </td>
+
+
+
+                    <!-- CUSTOMER -->
+
+                    <td>
+
+                        {{ order.user.username }}
+
+                    </td>
+
+
+
+                    <!-- EMAIL -->
+
+                    <td>
+
+                        {{ order.user.email }}
+
+                    </td>
+
+
+
+                    <!-- TOTAL -->
+
+                    <td>
+
+                        <strong>
+                            ₹{{ order.total_amount|floatformat:2 }}
+                        </strong>
+
+                    </td>
+
+
+
+                    <!-- STATUS -->
+
+                    <td>
+
+                        <span
+                            class="admin-order-status {{ order.status|lower }}"
+                        >
+
+                            {{ order.get_status_display }}
+
+                        </span>
+
+                    </td>
+
+
+
+                    <!-- DATE -->
+
+                    <td>
+
+                        {{ order.created_at|date:"d M Y, h:i A" }}
+
+                    </td>
+
+
+
+                    <!-- ACTION -->
+
+                    <td>
+
+                        <a
+                            href="{% url 'admin_order_detail' order.id %}"
+                            class="manage-order-btn"
+                        >
+                            View Details
+                        </a>
+
+                    </td>
+
+
+                </tr>
+
+                {% endfor %}
+
+            </tbody>
+
+        </table>
+
+    </div>
+
+
+    {% else %}
+
+
+    <!-- ========================= -->
+    <!-- NO ORDERS -->
+    <!-- ========================= -->
+
+    <div class="no-admin-orders">
+
+        <div class="no-orders-icon">
+            📦
+        </div>
+
+        <h2>
+            No Orders Found
+        </h2>
+
+        <p>
+            There are currently no customer orders.
+        </p>
+
+        <a
+            href="{% url 'product_list' %}"
+            class="btn"
+        >
+            View Products
+        </a>
+
+    </div>
+
+
+    {% endif %}
+
+
+</section>
+
+{% endblock %}

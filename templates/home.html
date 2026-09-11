@@ -1,0 +1,63 @@
+{% extends 'base.html' %}
+
+{% block title %}
+Home - MyStore
+{% endblock %}
+
+{% block content %}
+
+<section class="hero">
+
+    <div class="hero-content">
+
+        <h1>
+            Welcome to MyStore
+        </h1>
+
+        <p>
+            Shop quality products at the best prices.
+        </p>
+
+        <a href="{% url 'product_list' %}" class="btn">
+            Shop Now
+        </a>
+
+    </div>
+
+</section>
+
+
+<section class="home-section">
+
+    <h2>
+        Why Shop With Us?
+    </h2>
+
+    <div class="features">
+
+        <div class="feature-card">
+            <h3>Quality Products</h3>
+            <p>
+                We provide high-quality products.
+            </p>
+        </div>
+
+        <div class="feature-card">
+            <h3>Easy Shopping</h3>
+            <p>
+                Simple and user-friendly shopping experience.
+            </p>
+        </div>
+
+        <div class="feature-card">
+            <h3>Secure Orders</h3>
+            <p>
+                Your orders are safely managed.
+            </p>
+        </div>
+
+    </div>
+
+</section>
+
+{% endblock %}

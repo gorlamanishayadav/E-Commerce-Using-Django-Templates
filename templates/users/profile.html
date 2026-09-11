@@ -1,0 +1,112 @@
+{% extends 'base.html' %}
+
+{% block title %}My Profile - MyStore{% endblock %}
+
+{% block content %}
+
+<section class="profile-section">
+
+    <div class="profile-header">
+        <h1>My Profile</h1>
+    </div>
+
+    <!-- User Information -->
+
+    <div class="profile-card">
+
+        <h2>Personal Information</h2>
+
+        <p>
+            <strong>Username:</strong>
+            {{ user.username }}
+        </p>
+
+        <p>
+            <strong>Email:</strong>
+            {{ user.email }}
+        </p>
+
+    </div>
+
+
+    <!-- Address Section -->
+
+    <div class="address-section">
+
+        <div class="section-header">
+
+            <h2>My Addresses</h2>
+
+            <a href="{% url 'address_create' %}" class="btn">
+                + Add Address
+            </a>
+
+        </div>
+
+
+        <div class="address-grid">
+
+            {% for address in addresses %}
+
+            <div class="address-card">
+
+                <h3>{{ address.full_name }}</h3>
+
+                <p>
+                    📞 {{ address.phone }}
+                </p>
+
+                <p>
+                    {{ address.address_line }}
+                </p>
+
+                <p>
+                    {{ address.city }},
+                    {{ address.state }}
+                </p>
+
+                <p>
+                    <strong>Pincode:</strong>
+                    {{ address.pincode }}
+                </p>
+
+
+                <div class="address-actions">
+
+                    <a
+                        href="{% url 'address_update' address.id %}"
+                        class="edit-btn">
+                        Edit
+                    </a>
+
+                    <a
+                        href="{% url 'address_delete' address.id %}"
+                        class="delete-btn">
+                        Delete
+                    </a>
+
+                </div>
+
+            </div>
+
+            {% empty %}
+
+            <div class="empty-address">
+
+                <p>You haven't added any address yet.</p>
+
+                <a href="{% url 'address_create' %}" class="btn">
+                    Add Your First Address
+                </a>
+
+            </div>
+
+            {% endfor %}
+
+        </div>
+
+    </div>
+
+</section>
+
+{% endblock %}

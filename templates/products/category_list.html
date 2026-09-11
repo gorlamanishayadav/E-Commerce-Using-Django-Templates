@@ -1,0 +1,72 @@
+{% extends 'base.html' %}
+
+{% block title %}
+Categories - MyStore
+{% endblock %}
+
+{% block content %}
+
+<section class="category-section">
+
+    <div class="section-header">
+        <h1>Categories</h1>
+
+        {% if user.is_staff %}
+            <a href="{% url 'category_create' %}" class="btn">
+                Add Category
+            </a>
+        {% endif %}
+    </div>
+
+
+    <div class="category-grid">
+
+        {% for category in categories %}
+
+            <div class="category-card">
+
+                <h3>
+                    {{ category.name }}
+                </h3>
+
+                <p>
+                    {{ category.description }}
+                </p>
+
+                <p>
+                    Products:
+                    {{ category.products.count }}
+                </p>
+
+
+                {% if user.is_staff %}
+
+                    <a
+                        href="{% url 'category_update' category.id %}"
+                        class="edit-btn"
+                    >
+                        Edit
+                    </a>
+
+                    <a
+                        href="{% url 'category_delete' category.id %}"
+                        class="delete-btn"
+                    >
+                        Delete
+                    </a>
+
+                {% endif %}
+
+            </div>
+
+        {% empty %}
+
+            <p>No categories available.</p>
+
+        {% endfor %}
+
+    </div>
+
+</section>
+
+{% endblock %}
