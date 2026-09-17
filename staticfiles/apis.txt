@@ -1,0 +1,50 @@
+Home
+http://127.0.0.1:8000/
+
+Register
+http://127.0.0.1:8000/users/register/
+
+Login
+http://127.0.0.1:8000/users/login/
+
+Products
+http://127.0.0.1:8000/products/
+
+Product Details
+http://127.0.0.1:8000/products/<product_id>/
+
+Cart
+http://127.0.0.1:8000/cart/
+
+Checkout
+http://127.0.0.1:8000/orders/checkout/
+
+My Orders
+http://127.0.0.1:8000/orders/
+
+Order Details
+http://127.0.0.1:8000/orders/<order_id>/
+
+Profile
+http://127.0.0.1:8000/users/profile/
+
+
+Admin Dashboard
+http://127.0.0.1:8000/orders/admin/dashboard/
+
+Inventory
+http://127.0.0.1:8000/products/inventory/
+
+Manage Products
+http://127.0.0.1:8000/products/
+
+Manage Categories
+http://127.0.0.1:8000/products/categories/
+
+Manage Orders
+http://127.0.0.1:8000/orders/admin/
+
+User Management
+http://127.0.0.1:8000/users/admin/users/
+
+http://127.0.0.1:8000/admin/
