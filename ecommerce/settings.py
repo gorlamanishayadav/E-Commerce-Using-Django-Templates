@@ -108,39 +108,48 @@ WSGI_APPLICATION = 'ecommerce.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/6.1/ref/settings/#databases
 
-DATABASE_URL = os.getenv('DATABASE_URL')
+DATABASE_URL = os.getenv('DATABASE_URL', '').strip()
 
 try:
     import dj_database_url
 except ImportError:
     dj_database_url = None
 
+db_configured = False
+
 if DATABASE_URL and dj_database_url:
-    DATABASES = {
-        'default': dj_database_url.config(
-            default=DATABASE_URL,
+    try:
+        parsed_db = dj_database_url.parse(
+            DATABASE_URL,
             conn_max_age=600,
             conn_health_checks=True,
         )
-    }
-elif os.getenv('MYSQLDATABASE') or os.getenv('DB_NAME'):
-    DATABASES = {
-        'default': {
-            'ENGINE': os.getenv('DB_ENGINE', 'django.db.backends.mysql'),
-            'NAME': os.getenv('MYSQLDATABASE') or os.getenv('DB_NAME'),
-            'USER': os.getenv('MYSQLUSER') or os.getenv('DB_USER', 'root'),
-            'PASSWORD': os.getenv('MYSQLPASSWORD') or os.getenv('DB_PASSWORD', ''),
-            'HOST': os.getenv('MYSQLHOST') or os.getenv('DB_HOST', 'localhost'),
-            'PORT': os.getenv('MYSQLPORT') or os.getenv('DB_PORT', '3306'),
+        if parsed_db:
+            DATABASES = {'default': parsed_db}
+            db_configured = True
+    except Exception:
+        db_configured = False
+
+if not db_configured:
+    if os.getenv('MYSQLDATABASE') or os.getenv('DB_NAME'):
+        DATABASES = {
+            'default': {
+                'ENGINE': os.getenv('DB_ENGINE', 'django.db.backends.mysql'),
+                'NAME': os.getenv('MYSQLDATABASE') or os.getenv('DB_NAME'),
+                'USER': os.getenv('MYSQLUSER') or os.getenv('DB_USER', 'root'),
+                'PASSWORD': os.getenv('MYSQLPASSWORD') or os.getenv('DB_PASSWORD', ''),
+                'HOST': os.getenv('MYSQLHOST') or os.getenv('DB_HOST', 'localhost'),
+                'PORT': os.getenv('MYSQLPORT') or os.getenv('DB_PORT', '3306'),
+            }
         }
-    }
-else:
-    DATABASES = {
-        'default': {
-            'ENGINE': 'django.db.backends.sqlite3',
-            'NAME': BASE_DIR / 'db.sqlite3',
+    else:
+        DATABASES = {
+            'default': {
+                'ENGINE': 'django.db.backends.sqlite3',
+                'NAME': BASE_DIR / 'db.sqlite3',
+            }
         }
-    }
+
 
 
 # Password validation
