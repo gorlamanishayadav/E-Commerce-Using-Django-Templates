@@ -12,7 +12,5 @@ python manage.py collectstatic --no-input
 # Apply database migrations
 python manage.py migrate
 
-# Auto-create superuser on free tier if environment variables are set
-if [[ -n "$DJANGO_SUPERUSER_USERNAME" && -n "$DJANGO_SUPERUSER_PASSWORD" ]]; then
-  python manage.py createsuperuser --noinput || true
-fi
+# Auto-create or update superuser if environment variables are set
+python manage.py create_admin
