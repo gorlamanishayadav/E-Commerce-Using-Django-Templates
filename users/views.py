@@ -28,14 +28,28 @@ def login_view(request):
     if request.method == 'POST':
         from django.contrib.auth import authenticate
 
-        username = request.POST.get('username')
-        password = request.POST.get('password')
+        username_input = request.POST.get('username', '').strip()
+        password_input = request.POST.get('password', '')
 
+        # 1. Try standard username authentication
         user = authenticate(
             request,
-            username=username,
-            password=password
+            username=username_input,
+            password=password_input
         )
+
+        # 2. If not found, try matching by email address
+        if user is None and username_input:
+            try:
+                user_match = User.objects.filter(email__iexact=username_input).first()
+                if user_match:
+                    user = authenticate(
+                        request,
+                        username=user_match.username,
+                        password=password_input
+                    )
+            except Exception:
+                user = None
 
         if user is not None:
             login(request, user)
@@ -44,6 +58,7 @@ def login_view(request):
         messages.error(request, 'Invalid username or password.')
 
     return render(request, 'users/login.html')
+
 
 
 def logout_view(request):
